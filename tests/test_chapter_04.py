@@ -22,3 +22,13 @@ def test_mcp_tool_returns_summarized_vendor_financials():
     assert data["vendor_name"] == "Gujarat Steel Corp"
     assert data["invoice_amount"] == 500000.0
     assert data["payment_status"] == "Paid"
+
+
+def test_build_augmented_prompt_maps_vendor_name_to_mcp_vendor_id():
+    prompt = audit_agent.build_augmented_prompt("Audit the account for Gujarat Steel Corp.")
+
+    assert "Gujarat Steel Corp" in prompt
+    assert "VEN-1000" in prompt
+    assert "get_vendor_financials(\"VEN-1000\")" in prompt
+    assert "Do not pass the vendor name to get_vendor_financials" in prompt
+    assert "raw SQL" in prompt
